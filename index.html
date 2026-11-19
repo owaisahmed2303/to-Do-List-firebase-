@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO-DO List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100dvh;
+            width: 100%;
+            background-color: rgb(0, 0, 0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .todo-container {
+            min-height: 60vh;
+            max-height: 85dvh;
+            width: clamp(300px, 50vw, 700px);
+            border: 2px solid #333;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgb(48, 47, 47);
+            padding: 25px;
+            gap: 20px;
+        }
+
+        .inp-container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            gap: 10px;
+        }
+
+        #todo-inp {
+            flex: 1 1 180px;
+            min-width: 0;
+            height: 50px;
+            padding: 0 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: black;
+            color: white;
+            font-weight: 500;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        #todo-inp:focus {
+            border: 1px solid #27752c;
+        }
+
+        #btn-add {
+            height: 50px;
+            padding: 0 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #27752c;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        #btn-add:hover {
+            background-color: #2fff00;
+            color: black;
+        }
+
+        #btn-show {
+            height: 50px;
+            padding: 0 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #827e0d;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        #btn-show:hover {
+            background-color: #ffdd00;
+            color: black;
+        }
+
+        .mobile-icon {
+            display: none;
+        }
+
+        .todos-box {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+        }
+
+        .task-card {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            background-color: #1e1e1e;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid #27752c;
+            color: white;
+        }
+
+        .task-card span {
+            flex: 1 1 160px;
+            overflow-wrap: anywhere;
+            margin-right: 10px;
+        }
+
+        .task-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+            color: black;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-del {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .status1 {
+            color: #ec0707;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            border: none;
+        }
+
+        .status2 {
+            background-color: #7bff00;
+            color: #131111;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            border: none;
+            display: none;
+        }
+
+        .btn-done {
+            background-color: #e2e2e2;
+            color: #131111;
+            border: 2px solid black;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media screen and (max-width: 768px) {
+            .todo-container {
+                width: 100%;
+                padding: 16px;
+            }
+
+            .desktop-text {
+                display: none;
+            }
+
+            .mobile-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #btn-add,
+            #btn-show {
+                width: 50px;
+                min-width: 50px;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <div class="inp-container">
+            <input type="text" id="todo-inp" placeholder="Add a new task...">
+            <button id="btn-add" aria-label="Add task">
+                <span class="desktop-text">ADD</span>
+                <span class="mobile-icon"><i class="fa-solid fa-plus"></i></span>
+            </button>
+            <button id="btn-show" onclick="renderTaskAll()" aria-label="Show all tasks">
+                <span class="desktop-text">Show All Task</span>
+                <span class="mobile-icon"><i class="fa-solid fa-list"></i></span>
+            </button>
+        </div>
+        <div id="full-loader" class="loader-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading ...</p>
+        </div>
+        <div class="todos-box" id="toDoBox"></div>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+</body>
+</html>
