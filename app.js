@@ -1,4 +1,4 @@
-import {db, collection, addDoc, getDocs, deleteDoc, doc} from "./firebaseConfig.js";
+import {db, collection, addDoc, getDocs, deleteDoc,updateDoc, doc} from "./firebaseConfig.js";
 
 let taskInp = document.querySelector('#todo-inp');
 let addBtn = document.querySelector('#btn-add');
@@ -24,8 +24,29 @@ let editBtn= document.querySelector('.btn-edit');
 
 // }
 window.editTask= async(tid)=>{
+    try {
+        let updatedTask= prompt("Enter Text to update task:");
+        if (updatedTask == "" || updatedTask == null) return;
+
+        fullLoader.style.display = "flex";
+        await updateDoc(doc(db, "toDos", tid), {
+            text: updatedTask
+        });
+        await renderTaskAll();
+        fullLoader.style.display = "none";
+         }
+        
+     catch (error) {
+        fullLoader.style.display = "none";
+        console.error(error)
+    }
 
 }
+
+
+
+
+
 window.deleteTask= async(tid)=>{
      try {
          fullLoader.style.display = "flex";
@@ -50,7 +71,7 @@ window.renderTaskAll = async () => {
                <div class="task-card"> 
                     <span class="task-data">${task.data().text}</span> 
                     <div class="task-buttons">
-                        <button class="btn-edit">Edit</button> 
+                        <button class="btn-edit" onclick="editTask('${task.id}')">Edit</button> 
                         <button class="btn-del" onclick="deleteTask('${task.id}')">Delete</button>
                         <button class="btn-done">Done</button>
                     </div>
@@ -72,7 +93,7 @@ let renderTask= async(tid)=>{
                <div class="task-card"> 
                     <span class="task-data">${task.data().text}</span> 
                     <div class="task-buttons">
-                        <button class="btn-edit" click="edit">Edit</button> 
+                        <button class="btn-edit" onclick="editTask('${task.id}')">Edit</button> 
                         <button class="btn-del">Delete</button>
                         <button class="btn-done">Done</button>
                        
