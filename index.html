@@ -62,7 +62,7 @@
             border: 1px solid #27752c;
         }
 
-        #btn-add {
+        #btn-add , #btn-update{
             height: 50px;
             padding: 0 20px;
             font-size: 16px;
@@ -76,7 +76,7 @@
             white-space: nowrap;
         }
 
-        #btn-add:hover {
+        #btn-add:hover ,#btn-update:hover{
             background-color: #2fff00;
             color: black;
         }
@@ -250,11 +250,12 @@
     <div class="todo-container">
         <div class="inp-container">
             <input type="text" id="todo-inp" placeholder="Add a new task...">
+            <button id="btn-update" style="display: none;">Update</button>
             <button id="btn-add" aria-label="Add task">
-                <span class="desktop-text">ADD</span>
+                <span class="desktop-text" >ADD</span>
                 <span class="mobile-icon"><i class="fa-solid fa-plus"></i></span>
             </button>
-            <button id="btn-show" onclick="renderTaskAll()" aria-label="Show all tasks">
+            <button id="btn-show" aria-label="Show all tasks">
                 <span class="desktop-text">Show All Task</span>
                 <span class="mobile-icon"><i class="fa-solid fa-list"></i></span>
             </button>
@@ -263,7 +264,9 @@
             <div class="spinner"></div>
             <p>Loading ...</p>
         </div>
-        <div class="todos-box" id="toDoBox"></div>
+        <ul class="todos-box" id="toDoBox">
+            
+        </ul>
     </div>
 
     <script type="module" src="./app.js"></script>
